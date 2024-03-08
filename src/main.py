@@ -1,7 +1,12 @@
-from typing import Any
 from assembler import *
+from converters import *
 
-def Parse(x):
+def convert(x : list, instr : str)-> str:
+    if instr in R_:
+        convert_R(x, instr)
+        
+
+def Parse(x : str)-> str:
     #check if valid:
     if (x[0] == "#" or x[0] == "\n" or x[0] == "" or x[0] == "."):
         return ''
@@ -14,7 +19,11 @@ def Parse(x):
         x = x.replace(',', ' ')
     
     tokens = x.split(' ')
-    return tokens
+    instr = tokens[0]
+
+    output_line = convert(tokens[1:], instr)
+    
+    return output_line
 
 
 
