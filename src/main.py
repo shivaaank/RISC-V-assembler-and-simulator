@@ -1,9 +1,9 @@
-from assembler import *
+from instr_dicts import *
 from converters import *
 
 def convert(x : list, instr : str)-> str:
     if instr in R_:
-        convert_R(x, instr)
+        return convert_R(x, instr)
         
 
 def Parse(x : str)-> str:
@@ -18,8 +18,8 @@ def Parse(x : str)-> str:
     else:
         x = x.replace(',', ' ')
     
-    tokens = x.split(' ')
-    instr = tokens[0]
+    tokens = x.split(' ')   #[instruction, rd, rs1, ..]
+    instr = tokens[0]       #instruction
 
     output_line = convert(tokens[1:], instr)
     
@@ -35,4 +35,5 @@ with open("output.txt", "w") as f:
     for line in inp_lines:
         out_line = Parse(line)
         print(out_line)
-        # f.writeline(out_line)
+        f.write(out_line)
+        f.write("\n")
