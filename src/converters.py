@@ -65,4 +65,17 @@ def convert_S(x : list, instr : str) -> str:
     print("rs1 = ", rs1)
     print("offset = ", imm) 
     return imm[0:7]+rs2+rs1+funct3+imm[7:12]+opcode
-print(convert_S(['ra', '32(sp)'], 'sw'))
+#print(convert_S(['ra', '32(sp)'], 'sw'))
+
+def convert_J(x : list, instr : str) -> str:
+    opcode,rd = J_[instr], x[0]
+    rd = format(int(regs[rd][1:]),'05b')
+    imm = format(int(x[1]),'020b')
+    if imm[0] == '-':
+        imm = "0" + imm[1:]
+        imm = twos_comp(imm)
+    imm = imm[::-1]
+    imm = imm[19] + imm[9:0:-1] + imm[0]+imm[10] + imm[18:10:-1] #further inspection needed
+    print("rd = ", rd)
+    print("offset = ", x[1])
+    return imm + rd + opcode

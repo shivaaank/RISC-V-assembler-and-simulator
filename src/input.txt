@@ -1,1 +1,1 @@
-jalr ra,a5,-07
+jal ra,-1024

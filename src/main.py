@@ -6,6 +6,10 @@ def convert(x : list, instr : str)-> str:
         return convert_R(x, instr)
     elif instr in I_:
         return convert_I(x, instr)
+    elif instr in S_:
+        return convert_S(x, instr)
+    elif instr in J_:
+        return convert_J(x, instr)
     else:
         raise Exception ('{} is an invalid instruction'.format(instr))
         
