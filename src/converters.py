@@ -56,3 +56,13 @@ def convert_I(x : list, instr : str) -> str:
     return imm+rs1+func3+rd+opcode
 #print(convert_I(['ra','2(gp)'],'lw'))
 #print(convert_I(['t1', 's0', '120'], 'addi'))
+def convert_S(x : list, instr : str) -> str:
+    opcode, funct3 = S_[instr][0], S_[instr][1]
+    rs2 = format(int(regs[x[0]][1:]), '05b')
+    rs1 = format(int(regs[x[1].split('(')[1].rstrip(')')][1:]),'05b')
+    imm = format(int(x[1].split('(')[0].strip()),'012b')
+    print("rs2 = ", rs2)
+    print("rs1 = ", rs1)
+    print("offset = ", imm) 
+    return imm[-1:-7:-1]+rs2+rs1+funct3+imm[4:-1:-1]+opcode
+print(convert_S(['t5', '200(gp)'], 'sw'))
