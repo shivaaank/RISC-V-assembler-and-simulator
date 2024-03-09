@@ -22,6 +22,7 @@ def Parse(x : str, pc : int)-> str:
     if x=="beq zero,zero,0x00000000":
         #check if last line
         if pc==length:
+            #when convert_B, return convert_B
             return ''
         else:
             raise Exception ('Virtual halt not last instruction')
@@ -57,16 +58,17 @@ def Parse(x : str, pc : int)-> str:
 
 
 #read and store input from file
-with open("src\input.txt") as f:
+with open("input.txt") as f:
     inp_lines = [i.strip('\n') for i in f]
 
 length = len(inp_lines)
 count = 0
 
-with open("src\output.txt", "w") as f:
+with open("output.txt", "w") as f:
     for line in inp_lines:
-        count+=1
-        out_line = Parse(line, count)
-        print(out_line)
-        f.write(out_line)
-        f.write("\n")
+        if not line=='':
+            count+=1
+            out_line = Parse(line, count)
+            print(out_line)
+            f.write(out_line)
+            f.write("\n")
