@@ -19,10 +19,10 @@ def Parse(x : str, pc : int)-> str:
     if (x[0] == "#" or x[0] == "\n" or x[0] == "" or x[0] == "."):
         return ''
 
-    if x=="beq zero,zero,0x00000000":
+    if x=="beq zero,zero,0x00000000" or x == "beq zero,zero,0":
         #check if last line
         if pc==length:
-            return ''
+            return '00000000000000000000000001100011'
         else:
             raise Exception ('Virtual halt not last instruction')
 
