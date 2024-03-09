@@ -14,10 +14,21 @@ def convert(x : list, instr : str)-> str:
         raise Exception ('{} is an invalid instruction'.format(instr))
         
 
-def Parse(x : str)-> str:
+def Parse(x : str, pc : int)-> str:
     #check if valid:
     if (x[0] == "#" or x[0] == "\n" or x[0] == "" or x[0] == "."):
         return ''
+
+    if x=="beq zero,zero,0x00000000":
+        #check if last line
+        if pc==length:
+            return ''
+        else:
+            raise Exception ('Virtual halt not last instruction')
+
+    if pc==length and x!="beq zero,zero,0x00000000":
+        raise Exception ("missing virtual halt")
+
     #handle inline comments, replace , with space
     if "#" in x:
         pos = x.index("#")
@@ -26,7 +37,14 @@ def Parse(x : str)-> str:
     else:
         x = x.replace(',', ' ')
     
+
     tokens = x.split(' ')   #[instruction, rd, rs1, ..]
+    
+    if tokens[0][-1]==':' :#label
+        tokens = tokens[1:]
+        if tokens == []:
+            return ''
+
     instr = tokens[0]       #instruction
     
     output_line = convert(tokens[1:], instr)
@@ -39,9 +57,13 @@ def Parse(x : str)-> str:
 with open("src\input.txt") as f:
     inp_lines = [i.strip('\n') for i in f]
 
+length = len(inp_lines)
+count = 0
+
 with open("src\output.txt", "w") as f:
     for line in inp_lines:
-        out_line = Parse(line)
+        count+=1
+        out_line = Parse(line, count)
         print(out_line)
         f.write(out_line)
         f.write("\n")
