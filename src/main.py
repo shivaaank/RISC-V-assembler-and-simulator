@@ -1,7 +1,7 @@
 from instr_dicts import *
 from converters import *
 
-def convert(x : list, instr : str)-> str:
+def convert(x : list, instr : str, pc: int)-> str:
     if instr in R_:
         return convert_R(x, instr)
     elif instr in I_:
@@ -9,7 +9,7 @@ def convert(x : list, instr : str)-> str:
     elif instr in S_:
         return convert_S(x, instr)
     elif instr in J_:
-        return convert_J(x, instr)
+        return convert_J(x, instr, pc)
     else:
         raise Exception ('{} is an invalid instruction'.format(instr))
         
@@ -47,7 +47,7 @@ def Parse(x : str, pc : int)-> str:
 
     instr = tokens[0]       #instruction
     
-    output_line = convert(tokens[1:], instr)
+    output_line = convert(tokens[1:], instr, pc)
     
     return output_line
 

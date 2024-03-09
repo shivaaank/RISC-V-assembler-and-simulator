@@ -67,10 +67,15 @@ def convert_S(x : list, instr : str) -> str:
     return imm[0:7]+rs2+rs1+funct3+imm[7:12]+opcode
 #print(convert_S(['ra', '32(sp)'], 'sw'))
 
-def convert_J(x : list, instr : str) -> str:
+def convert_J(x : list, instr : str, pc: int) -> str:
     opcode,rd = J_[instr], x[0]
     rd = format(int(regs[rd][1:]),'05b')
     imm = format(int(x[1]),'020b')
+    if int(x[1])%4 != 0:
+        raise Exception('Invalid offset value')
+    if int(x[1]) < 0:
+        if -int(x[1]) > pc:
+            raise Exception("Offset outside program range")
     if imm[0] == '-':
         imm = "0" + imm[1:]
         imm = twos_comp(imm)
