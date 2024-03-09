@@ -64,5 +64,5 @@ def convert_S(x : list, instr : str) -> str:
     print("rs2 = ", rs2)
     print("rs1 = ", rs1)
     print("offset = ", imm) 
-    return imm[-1:-7:-1]+rs2+rs1+funct3+imm[4:-1:-1]+opcode
-print(convert_S(['t5', '200(gp)'], 'sw'))
+    return imm[0:7]+rs2+rs1+funct3+imm[7:12]+opcode
+print(convert_S(['ra', '32(sp)'], 'sw'))
