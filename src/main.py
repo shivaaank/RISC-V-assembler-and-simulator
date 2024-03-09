@@ -4,6 +4,10 @@ from converters import *
 def convert(x : list, instr : str)-> str:
     if instr in R_:
         return convert_R(x, instr)
+    elif instr in I_:
+        return convert_I(x, instr)
+    else:
+        raise Exception ('{} is an invalid instruction'.format(instr))
         
 
 def Parse(x : str)-> str:
@@ -20,7 +24,7 @@ def Parse(x : str)-> str:
     
     tokens = x.split(' ')   #[instruction, rd, rs1, ..]
     instr = tokens[0]       #instruction
-
+    
     output_line = convert(tokens[1:], instr)
     
     return output_line
@@ -28,10 +32,10 @@ def Parse(x : str)-> str:
 
 
 #read and store input from file
-with open("input.txt") as f:
+with open("src\input.txt") as f:
     inp_lines = [i.strip('\n') for i in f]
 
-with open("output.txt", "w") as f:
+with open("src\output.txt", "w") as f:
     for line in inp_lines:
         out_line = Parse(line)
         print(out_line)
