@@ -47,7 +47,10 @@ def Parse(x : str, pc : int)-> str:
 
     instr = tokens[0]       #instruction
     
-    output_line = convert(tokens[1:], instr)
+    try:
+        output_line = convert(tokens[1:], instr)
+    except KeyError:
+        raise Exception ("Invalid instruction or wrong register name")
     
     return output_line
 
