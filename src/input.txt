@@ -1,11 +1,7 @@
-add a0,t0,t1
-lw t2,100(sp)
-
-
-jal ra,-48
-sub s2,s3,s4
-sw t5,200(gp)
-sltiu s5,a2,10
-xor a3,t3,t4
-addi s6,s7,25
+lui t0,100
+addi t1,t0,-50
+addi t2,t1,20
+add t3,t1,t2
+jal gp,-512
+jalr t4,t0,0
 beq zero,zero,0

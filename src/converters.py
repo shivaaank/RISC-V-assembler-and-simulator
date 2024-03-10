@@ -1,15 +1,15 @@
 from instr_dicts import *
 from reg_dicts import *
 
-def twos_comp(s: str):
+def twos_comp(s: str):                                                                                              #fxn calculates twos complement, by first reversing 0s to 1s and 1s to 0s
     fin = ""; fina = ""
-    for i in s:
-        if i == '0':
+    for i in s:                                                                                         
+        if i == '0': 
             fin += '1'
         else:
             fin += '0'
     
-    for i in range(len(fin)-1,0,-1):
+    for i in range(len(fin)-1,0,-1):                                                                                
         if fin[i] == '1':
             fina = '0' + fina
         else:
@@ -20,9 +20,9 @@ def twos_comp(s: str):
     return fina
         
 
-def convert_R(x : list, instr : str) -> str:
-    opcode, funct3, funct7 = R_[instr][0], R_[instr][1], R_[instr][2]
-    rd = format(int(regs[x[0]][1:]), '05b')
+def convert_R(x : list, instr : str) -> str:                                                                        #takes a list 'x' as input with R-type instructions and opcode string. returns a string
+    opcode, funct3, funct7 = R_[instr][0], R_[instr][1], R_[instr][2]                                               #takes opcode, funct3, funct7 from instr_dicts.py
+    rd = format(int(regs[x[0]][1:]), '05b')                                                                             
     rs1 = format(int(regs[x[1]][1:]), '05b')
     rs2 = format(int(regs[x[2]][1:]), '05b')
     print("rd = ", rd)
@@ -86,3 +86,19 @@ def convert_J(x : list, instr : str, pc: int) -> str:
     print("rd = ", rd)
     print("offset = ", x[1])
     return imm + rd + opcode
+
+
+#U-type instructions
+def convert_U(x: list, instr: str, pc: int) -> str:
+    opcode = U_[instr][0]
+    rd = format(int(regs[x[0]][1:]), '05b')          # Convert destination register to binary
+    imm = int(x[1]) << 12                            # Shift immediate value left by 12 bits
+    if instr == 'auipc':
+        imm += pc                                    # Add PC to immediate value for auipc instruction
+    imm = format(imm, '020b')                        # Format immediate value as binary
+    print("rd =", rd)
+    print("imm =", imm)
+    print("opcode =", opcode)
+    machine_code = imm + rd + opcode                 # Concatenate all parts to form the machine code
+    print("machine_code =", machine_code)
+    return machine_code

@@ -10,6 +10,8 @@ def convert(x : list, instr : str, pc: int)-> str:        #senior function check
         return convert_S(x, instr)
     elif instr in J_:
         return convert_J(x, instr, pc)
+    elif instr in U_:
+        return convert_U(x, instr, pc)
     else:
         raise Exception ('{} is an invalid instruction'.format(instr))
         
@@ -57,14 +59,14 @@ def Parse(x : str, pc : int)-> str:                                     #functio
 
 
 #read and store input from file                                         #classic input
-with open("src\input.txt") as f:
+with open(r"input.txt") as f:
     inp_lines = [i.strip('\n') for i in f]
 inp_lines = [i for i in inp_lines if i != '']
 length = len(inp_lines)
 print(inp_lines)
 count = 0
 
-with open("src\output.txt", "w") as f:
+with open(r"output.txt", "w") as f:
     for line in inp_lines:
         #if not line=='':
             count+=1
