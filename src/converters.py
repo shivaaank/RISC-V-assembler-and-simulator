@@ -90,7 +90,7 @@ def convert_J(x : list, instr : str, pc: int) -> str:
 
 #U-type instructions
 def convert_U(x: list, instr: str, pc: int) -> str:
-    opcode = U_[instr][0]
+    opcode = U_[instr]
     rd = format(int(regs[x[0]][1:]), '05b')          #converts destination register to binary
     imm = int(x[1])                                   #immediate value
     if imm < 0:
