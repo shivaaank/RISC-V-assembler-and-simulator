@@ -1,12 +1,11 @@
-add ra,t0,gp
-sub t1,s0,a0
-sll a1,t2,t3
-slt s1,a2,s2
+add a0,t0,t1
+lw t2,100(sp)
 
-sltu s3,a3,s4
-xor s5,a4,s6
-srl s7,a5,s8
 
-or s9,a6,s10
-and s11,a7,s0
+jal ra,-48
+sub s2,s3,s4
+sw t5,200(gp)
+sltiu s5,a2,10
+xor a3,t3,t4
+addi s6,s7,25
 beq zero,zero,0
