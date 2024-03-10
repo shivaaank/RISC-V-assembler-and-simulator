@@ -57,13 +57,15 @@ def Parse(x : str, pc : int)-> str:
 
 
 #read and store input from file
-with open("input.txt") as f:
+with open("src\input.txt") as f:
     inp_lines = [i.strip('\n') for i in f]
-
+for line in inp_lines:
+    if line == '':
+        inp_lines.remove(line)
 length = len(inp_lines)
 count = 0
 
-with open("output.txt", "w") as f:
+with open("src\output.txt", "w") as f:
     for line in inp_lines:
         if not line=='':
             count+=1
