@@ -91,11 +91,13 @@ def convert_J(x : list, instr : str, pc: int) -> str:
 #U-type instructions
 def convert_U(x: list, instr: str, pc: int) -> str:
     opcode = U_[instr][0]
-    rd = format(int(regs[x[0]][1:]), '05b')          # Convert destination register to binary
-    imm = int(x[1]) << 12                            # Shift immediate value left by 12 bits
-    if instr == 'auipc':
-        imm += pc                                    # Add PC to immediate value for auipc instruction
-    imm = format(imm, '020b')                        # Format immediate value as binary
+    rd = format(int(regs[x[0]][1:]), '05b')          #converts destination register to binary
+    imm = int(x[1])                                   #immediate value
+    if imm < 0:
+        imm = twos_comp(format(abs(imm), '020b'))    #computes two's complement for immediate < 0
+    else:
+        imm = format(imm, '020b')                   
+    
     print("rd =", rd)
     print("imm =", imm)
     print("opcode =", opcode)
