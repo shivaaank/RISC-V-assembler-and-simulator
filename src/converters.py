@@ -108,24 +108,25 @@ def convert_U(x: list, instr: str, pc: int) -> str:
     print("machine_code =", machine_code)
     return machine_code
 
-def convert_B(x : list, instr: str, pc: int) -> str:
+def convert_B(x : list, instr: str, pc: int, labledict : dict) -> str:
     opcode, funct3 = B_[instr][0], B_[instr][1]
     rs1 = format(int(regs[x[0]][1:]), '05b')
     rs2 = format(int(regs[x[1]][1:]), '05b') 
-    imm = int(x[2])
+    print(labledict)
+    if x[2] not in labledict and x[2].isdigit():
+        imm = int(x[2])
+
+    elif x[2] in labledict:
+        lable_addr = labledict[x[2]]
+        imm = (pc-lable_addr)*4
+
+    else:
+        raise Exception ("Invalid lable")
+
     if imm < 0:
         imm = twos_comp(format(abs(imm), '013b'))    #computes two's complement for immediate < 0
     else:
         imm = format(imm, '013b')
     imm = imm[::-1]
-
-    # print(imm[12])
-    # print(imm[10:4:-1])
-    # print(rs2)
-    # print(rs1)
-    # print(funct3)
-    # print(imm[4:0:-1])
-    # print(imm[11])
-    # print(opcode)
 
     return imm[12]+imm[10:4:-1]+rs2+rs1+funct3+imm[4:0:-1]+imm[11]+opcode
