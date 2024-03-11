@@ -39,7 +39,7 @@ def Parse(x : str, pc : int)-> str:                                     #functio
     if (x[0] == "\n" or x[0] == "" or x[0] == "."):      #checks whether string is a comment or empty, in which case returns empty string
         return ''
 
-    if x.startswith("beq zero,zero,0x00000000") or x.startswith("beq zero,zero,0") or x.startswith("beq,zero,zero,0"):         #checks if instruction is virtual halt
+    if x=="beq zero,zero,0x00000000" or x=="beq zero,zero,0" or x=="beq,zero,zero,0":         #checks if instruction is virtual halt
         #check if last line
 
             
