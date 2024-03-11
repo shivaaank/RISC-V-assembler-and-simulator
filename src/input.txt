@@ -1,2 +1,2 @@
-jal ra,-1024
-beq zero, zero, 0
+start:
+beq zero,zero,0x00000000
