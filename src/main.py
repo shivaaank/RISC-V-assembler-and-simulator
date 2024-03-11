@@ -65,7 +65,7 @@ with open(r"src/input.txt") as f:
     inp_lines = [i.strip('\n').strip() for i in f]
 inp_lines = [i for i in inp_lines if i != ''] #remove empty lines
 
-print(inp_lines)
+#print(inp_lines)
 count = 0
 
 #first pass
@@ -75,17 +75,20 @@ for line in inp_lines:
     temp = temp.split(' ')
     if ':' in temp[0]:#label
         temp2 = temp[0].split(':')
+        temp2 = [i for i in temp2 if i!='']
         temp = temp2 + temp[1:]           
         label_[temp[0]] = count 
-        if temp[1:] is []:
+        if temp[1:] == []:
             inp_lines.pop(count - 1)
+                  
         else:
             inp_lines[count - 1] = ','.join(temp[1:]).lstrip(',')
+            
 count = 0   
 inp_lines = [i for i in inp_lines if i != ''] #remove empty lines
 
-print(label_)
-print(inp_lines)
+#print(label_)
+#print(inp_lines)
 length = len(inp_lines)
 #second pass
 with open(r"src/output.txt", "w") as f:

@@ -1,6 +1,7 @@
-start:xor s0,s1,s2
-addi s3,s4,-50
 
+xor s0,s1,s2
+addi s3,s4,-50
+start:
 auipc t0,-64
 jal t1,32
 srl t2,t3,t4
