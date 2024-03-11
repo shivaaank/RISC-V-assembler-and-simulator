@@ -21,6 +21,7 @@ def twos_comp(s: str):                                                          
         
 
 def convert_R(x : list, instr : str) -> str:                                                                        #takes a list 'x' as input with R-type instructions and opcode string. returns a string
+    assert len(x)==3, "syntax error"
     opcode, funct3, funct7 = R_[instr][0], R_[instr][1], R_[instr][2]                                               #takes opcode, funct3, funct7 from instr_dicts.py
     rd = format(int(regs[x[0]][1:]), '05b')                                                                             
     rs1 = format(int(regs[x[1]][1:]), '05b')
@@ -32,6 +33,7 @@ def convert_R(x : list, instr : str) -> str:                                    
 # print(convert_R(['t1', 's0', 'a0'], 'sub'))
 
 def convert_I(x : list, instr : str) -> str:
+    assert len(x)==3, "syntax error"
     opcode, func3 = I_[instr][0], I_[instr][1]
     if instr == 'lw':
         rd = format(int(regs[x[0]][1:]),'05b')
@@ -58,6 +60,7 @@ def convert_I(x : list, instr : str) -> str:
 #print(convert_I(['ra','2(gp)'],'lw'))
 #print(convert_I(['t1', 's0', '120'], 'addi'))
 def convert_S(x : list, instr : str) -> str:
+    assert len(x)==2, "syntax error"
     opcode, funct3 = S_[instr][0], S_[instr][1]
     rs2 = format(int(regs[x[0]][1:]), '05b')
     rs1 = format(int(regs[x[1].split('(')[1].rstrip(')')][1:]),'05b')
@@ -72,6 +75,7 @@ def convert_S(x : list, instr : str) -> str:
 #print(convert_S(['ra', '32(sp)'], 'sw'))
 
 def convert_J(x : list, instr : str, pc: int) -> str:
+    assert len(x)==2, "syntax error"
     opcode,rd = J_[instr], x[0]
     rd = format(int(regs[rd][1:]),'05b')
     imm = format(int(x[1]),'021b')
@@ -84,7 +88,6 @@ def convert_J(x : list, instr : str, pc: int) -> str:
         imm = "0" + imm[1:]
         imm = twos_comp(imm)
     imm = imm[::-1]
-    #imm = imm[19] + imm[9:0:-1] + imm[0]+imm[10] + imm[18:10:-1] #further inspection needed
     imm = imm[20] + imm[10:0:-1] +imm[11] + imm[19:11:-1]
     print("rd = ", rd)
     print("offset = ", x[1])
@@ -93,6 +96,7 @@ def convert_J(x : list, instr : str, pc: int) -> str:
 
 #U-type instructions
 def convert_U(x: list, instr: str, pc: int) -> str:
+    assert len(x)==2, "syntax error"
     opcode = U_[instr]
     rd = format(int(regs[x[0]][1:]), '05b')          #converts destination register to binary
     imm = int(x[1])                                   #immediate value
@@ -109,6 +113,7 @@ def convert_U(x: list, instr: str, pc: int) -> str:
     return machine_code
 
 def convert_B(x : list, instr: str, pc: int, labledict : dict) -> str:
+    assert len(x)==3, "syntax error"
     opcode, funct3 = B_[instr][0], B_[instr][1]
     rs1 = format(int(regs[x[0]][1:]), '05b')
     rs2 = format(int(regs[x[1]][1:]), '05b') 

@@ -26,7 +26,8 @@ def convert(x : list, instr : str, pc: int)-> str:        #senior function check
 
 def Parse(x : str, pc : int)-> str:                                     #function takes string 'x' and program counter pc as int. 
     #check if valid:
-    if (x[0] == "#" or x[0] == "\n" or x[0] == "" or x[0] == "."):      #checks whether string is a comment or empty, in which case returns empty string
+    # x = x.lstrip()
+    if (x[0] == "\n" or x[0] == "" or x[0] == "."):      #checks whether string is a comment or empty, in which case returns empty string
         return ''
 
     if x=="beq zero,zero,0x00000000" or x == "beq zero,zero,0" or x == "beq,zero,zero,0":         #checks if instruction is virtual halt
@@ -49,11 +50,6 @@ def Parse(x : str, pc : int)-> str:                                     #functio
     
 
     tokens = x.split(' ')   #[instruction, rd, rs1, ..]                #splits the str into tokens, for every space
-    
-    # if tokens[0][-1]==':' :#label           
-    #     tokens = tokens[1:]
-    #     if tokens == []:
-    #         return ''
 
     instr = tokens[0]       #instruction                                #first element of tokens is the instruction 
     
@@ -70,6 +66,7 @@ def Parse(x : str, pc : int)-> str:                                     #functio
 with open(inp_file) as f:
     inp_lines = [i.strip('\n').strip() for i in f]
 inp_lines = [i for i in inp_lines if i != ''] #remove empty lines
+inp_lines = [i for i in inp_lines if i.strip()[0]!="#"] #remove commented lines
 
 #print(inp_lines)
 count = 0
@@ -83,7 +80,7 @@ for line in inp_lines:
         temp2 = [i for i in temp2 if i!='']
         temp = temp2 + temp[1:]           
         label_[temp[0]] = count 
-        if temp[1:] == []:
+        if temp[1:]==[] or (temp[1:][0].lstrip()[0]=="#"):
             inp_lines.pop(count)
                   
         else:
@@ -91,8 +88,7 @@ for line in inp_lines:
     count += 1
             
 count = 0
-inp_lines = [i for i in inp_lines if i != ''] #remove empty lines
-
+print(inp_lines)
 #print(label_)
 #print(inp_lines)
 length = len(inp_lines)
@@ -100,10 +96,11 @@ length = len(inp_lines)
 with open(out_file, "w") as f:
     for line in inp_lines:
         #if not line=='':
-            print(f'Instruction {count+1}.')
             out_line = Parse(line, count)
-            print(out_line)
-            print('----------')
-            f.write(out_line)
-            f.write("\n")
-            count+=1
+            if out_line!='':
+                print(f'Instruction {count+1}.')
+                print(out_line)
+                print('----------')
+                f.write(out_line)
+                f.write("\n")
+                count+=1
