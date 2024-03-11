@@ -14,6 +14,8 @@ def convert(x : list, instr : str, pc: int)-> str:        #senior function check
         return convert_J(x, instr, pc)
     elif instr in U_:
         return convert_U(x, instr, pc)
+    elif instr in B_:
+        return convert_B(x, instr, pc, label_)
     else:
         raise Exception ('{} is an invalid instruction'.format(instr))
         
@@ -61,7 +63,7 @@ def Parse(x : str, pc : int)-> str:                                     #functio
 
 
 #read and store input from file                                         #classic input
-with open(r"src/input.txt") as f:
+with open(r"input.txt") as f:
     inp_lines = [i.strip('\n').strip() for i in f]
 inp_lines = [i for i in inp_lines if i != ''] #remove empty lines
 
@@ -74,7 +76,7 @@ for line in inp_lines:
     temp = line.replace(',', ' ')
     temp = temp.split(' ')
     if temp[0][-1]==':' :#label           
-        label_[temp[0]] = count
+        label_[temp[0].rstrip(':')] = count
         if temp[1:] is []:
             inp_lines.pop(count - 1)
         else:
@@ -86,7 +88,7 @@ inp_lines = [i for i in inp_lines if i != ''] #remove empty lines
 # print(inp_lines)
 length = len(inp_lines)
 #second pass
-with open(r"src/output.txt", "w") as f:
+with open(r"output.txt", "w") as f:
     for line in inp_lines:
         #if not line=='':
             count+=1
