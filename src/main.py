@@ -66,7 +66,7 @@ length = len(inp_lines)
 #print(inp_lines)
 count = 0
 
-with open(r"output.txt", "w") as f:
+with open(r"src\output.txt", "w") as f:
     for line in inp_lines:
         #if not line=='':
             count+=1

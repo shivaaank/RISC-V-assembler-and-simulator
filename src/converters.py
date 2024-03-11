@@ -62,6 +62,9 @@ def convert_S(x : list, instr : str) -> str:
     rs2 = format(int(regs[x[0]][1:]), '05b')
     rs1 = format(int(regs[x[1].split('(')[1].rstrip(')')][1:]),'05b')
     imm = format(int(x[1].split('(')[0].strip()),'012b')
+    if imm[0] == '-':
+        imm = "0" + imm[1:]
+        imm = twos_comp(imm)
     print("rs2 = ", rs2)
     print("rs1 = ", rs1)
     print("offset = ", imm) 
