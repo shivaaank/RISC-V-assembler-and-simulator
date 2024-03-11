@@ -118,11 +118,11 @@ def convert_B(x : list, instr: str, pc: int, labledict : dict) -> str:
 
     elif x[2] in labledict:
         lable_addr = labledict[x[2]]
-        imm = (pc-lable_addr)*4
+        imm = (lable_addr-pc)*4
 
     else:
         raise Exception ("Invalid lable")
-
+    print(imm)
     if imm < 0:
         imm = twos_comp(format(abs(imm), '013b'))    #computes two's complement for immediate < 0
     else:

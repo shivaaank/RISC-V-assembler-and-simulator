@@ -31,12 +31,12 @@ def Parse(x : str, pc : int)-> str:                                     #functio
 
     if x=="beq zero,zero,0x00000000" or x == "beq zero,zero,0" or x == "beq,zero,zero,0":         #checks if instruction is virtual halt
         #check if last line
-        if pc==length:      
+        if pc==length-1:      
             return '00000000000000000000000001100011'                   #returns machine code for virtual halt, otherwise throws error suggesting that it is not last instruction
         else:
             raise Exception ('Virtual halt not last instruction')
 
-    if pc==length and x!="beq zero,zero,0x00000000":                    #if program counter is equal to length of instructions, throw error for missing Virtual halt
+    if pc==length-1 and (x!="beq zero,zero,0x00000000" or x!="beq,zero,zero,0" or x!="beq zero,zero,0"):                    #if program counter is equal to length of instructions, throw error for missing Virtual halt
         raise Exception ("missing virtual halt")
 
     #handle inline comments, replace , with space
@@ -76,7 +76,6 @@ count = 0
 
 #first pass
 for line in inp_lines:
-    count += 1
     temp = line.replace(',', ' ')
     temp = temp.split(' ')
     if ':' in temp[0]:#label
@@ -85,12 +84,13 @@ for line in inp_lines:
         temp = temp2 + temp[1:]           
         label_[temp[0]] = count 
         if temp[1:] == []:
-            inp_lines.pop(count - 1)
+            inp_lines.pop(count)
                   
         else:
-            inp_lines[count - 1] = ','.join(temp[1:]).lstrip(',')
+            inp_lines[count] = ','.join(temp[1:]).lstrip(',')
+    count += 1
             
-count = 0   
+count = 0
 inp_lines = [i for i in inp_lines if i != ''] #remove empty lines
 
 #print(label_)
@@ -100,10 +100,10 @@ length = len(inp_lines)
 with open(out_file, "w") as f:
     for line in inp_lines:
         #if not line=='':
-            count+=1
             print(f'Instruction {count}.')
             out_line = Parse(line, count)
             print(out_line)
             print('----------')
             f.write(out_line)
             f.write("\n")
+            count+=1
