@@ -71,7 +71,7 @@ def convert_S(x : list, instr : str) -> str:
 def convert_J(x : list, instr : str, pc: int) -> str:
     opcode,rd = J_[instr], x[0]
     rd = format(int(regs[rd][1:]),'05b')
-    imm = format(int(x[1]),'020b')
+    imm = format(int(x[1]),'021b')
     # if int(x[1])%4 != 0:
     #     raise Exception('Invalid offset value')
     # if int(x[1]) < 0:
@@ -82,7 +82,7 @@ def convert_J(x : list, instr : str, pc: int) -> str:
         imm = twos_comp(imm)
     imm = imm[::-1]
     #imm = imm[19] + imm[9:0:-1] + imm[0]+imm[10] + imm[18:10:-1] #further inspection needed
-    imm = 2*imm[19] + imm[9:0:-1] +imm[10] + imm[18:10:-1]
+    imm = imm[20] + imm[10:0:-1] +imm[11] + imm[19:11:-1]
     print("rd = ", rd)
     print("offset = ", x[1])
     return imm + rd + opcode
@@ -94,10 +94,10 @@ def convert_U(x: list, instr: str, pc: int) -> str:
     rd = format(int(regs[x[0]][1:]), '05b')          #converts destination register to binary
     imm = int(x[1])                                   #immediate value
     if imm < 0:
-        imm = twos_comp(format(abs(imm), '020b'))    #computes two's complement for immediate < 0
+        imm = twos_comp(format(abs(imm), '032b'))    #computes two's complement for immediate < 0
     else:
-        imm = format(imm, '020b')                   
-    
+        imm = format(imm, '032b')                   
+    imm = imm[:20]
     print("rd =", rd)
     print("imm =", imm)
     print("opcode =", opcode)
