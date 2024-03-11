@@ -60,7 +60,7 @@ def Parse(x : str, pc : int)-> str:                                     #functio
 
 #read and store input from file                                         #classic input
 with open(r"src\input.txt") as f:
-    inp_lines = [i.strip('\n') for i in f]
+    inp_lines = [i.strip('\n').strip() for i in f]
 inp_lines = [i for i in inp_lines if i != ''] #remove empty lines
 length = len(inp_lines)
 #print(inp_lines)
