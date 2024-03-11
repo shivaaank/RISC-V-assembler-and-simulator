@@ -94,10 +94,10 @@ def convert_U(x: list, instr: str, pc: int) -> str:
     rd = format(int(regs[x[0]][1:]), '05b')          #converts destination register to binary
     imm = int(x[1])                                   #immediate value
     if imm < 0:
-        imm = twos_comp(format(abs(imm), '020b'))    #computes two's complement for immediate < 0
+        imm = twos_comp(format(abs(imm), '032b'))    #computes two's complement for immediate < 0
     else:
-        imm = format(imm, '020b')                   
-    
+        imm = format(imm, '032b')                   
+    imm = imm[:20]
     print("rd =", rd)
     print("imm =", imm)
     print("opcode =", opcode)
