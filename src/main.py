@@ -1,6 +1,10 @@
 from instr_dicts import *
 from converters import *
+import sys
 
+# print(sys.argv)
+inp_file = sys.argv[1]
+out_file = sys.argv[2]
 label_ = {}
 
 def convert(x : list, instr : str, pc: int)-> str:        #senior function checking where the opcode exists.  
@@ -63,7 +67,7 @@ def Parse(x : str, pc : int)-> str:                                     #functio
 
 
 #read and store input from file                                         #classic input
-with open(r"input.txt") as f:
+with open(inp_file) as f:
     inp_lines = [i.strip('\n').strip() for i in f]
 inp_lines = [i for i in inp_lines if i != ''] #remove empty lines
 
@@ -93,7 +97,7 @@ inp_lines = [i for i in inp_lines if i != ''] #remove empty lines
 #print(inp_lines)
 length = len(inp_lines)
 #second pass
-with open(r"output.txt", "w") as f:
+with open(out_file, "w") as f:
     for line in inp_lines:
         #if not line=='':
             count+=1
