@@ -25,7 +25,7 @@ def Parse(x : str, pc : int)-> str:                                     #functio
     if (x[0] == "#" or x[0] == "\n" or x[0] == "" or x[0] == "."):      #checks whether string is a comment or empty, in which case returns empty string
         return ''
 
-    if x=="beq zero,zero,0x00000000" or x == "beq zero,zero,0" or x == "beq,zero,zero,0":         #checks if the string is beq instruction with zero operands
+    if x=="beq zero,zero,0x00000000" or x == "beq zero,zero,0" or x == "beq,zero,zero,0":         #checks if instruction is virtual halt
         #check if last line
         if pc==length:      
             return '00000000000000000000000001100011'                   #returns machine code for virtual halt, otherwise throws error suggesting that it is not last instruction
@@ -75,17 +75,22 @@ for line in inp_lines:
     count += 1
     temp = line.replace(',', ' ')
     temp = temp.split(' ')
-    if temp[0][-1]==':' :#label           
-        label_[temp[0].rstrip(':')] = count
-        if temp[1:] is []:
+    if ':' in temp[0]:#label
+        temp2 = temp[0].split(':')
+        temp2 = [i for i in temp2 if i!='']
+        temp = temp2 + temp[1:]           
+        label_[temp[0]] = count 
+        if temp[1:] == []:
             inp_lines.pop(count - 1)
+                  
         else:
-            inp_lines[count - 1] = ','.join(temp[1:])
+            inp_lines[count - 1] = ','.join(temp[1:]).lstrip(',')
+            
 count = 0   
 inp_lines = [i for i in inp_lines if i != ''] #remove empty lines
 
-# print(label_)
-# print(inp_lines)
+#print(label_)
+#print(inp_lines)
 length = len(inp_lines)
 #second pass
 with open(r"output.txt", "w") as f:
