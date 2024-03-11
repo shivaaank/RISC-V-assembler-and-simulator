@@ -31,7 +31,7 @@ def Parse(x : str, pc : int)-> str:                                     #functio
     #handle inline comments, replace , with space
     if "#" in x:
         pos = x.index("#")                                              #if there is a comment, sets index to position of # in str
-        if pos != 0 and pos != len(x)-1:                                #if position isn't first or last, replaces ',' by ' ' from 0 to position
+        if pos != 0:                                #if position isn't first or last, replaces ',' by ' ' from 0 to position
             x = x[0:pos]
             print(x)
     
