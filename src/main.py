@@ -1,6 +1,8 @@
 from instr_dicts import *
 from converters import *
 
+label_ = {}
+
 def convert(x : list, instr : str, pc: int)-> str:        #senior function checking where the opcode exists.  
     if instr in R_:                                       #Accordingly it runs functions relevant to the type of instruction, R, I, S, J, U, B etc.
         return convert_R(x, instr)
@@ -21,7 +23,7 @@ def Parse(x : str, pc : int)-> str:                                     #functio
     if (x[0] == "#" or x[0] == "\n" or x[0] == "" or x[0] == "."):      #checks whether string is a comment or empty, in which case returns empty string
         return ''
 
-    if x=="beq zero,zero,0x00000000" or x == "beq zero,zero,0":         #checks if the string is beq instruction with zero operands
+    if x=="beq zero,zero,0x00000000" or x == "beq zero,zero,0" or x == "beq,zero,zero,0":         #checks if the string is beq instruction with zero operands
         #check if last line
         if pc==length:      
             return '00000000000000000000000001100011'                   #returns machine code for virtual halt, otherwise throws error suggesting that it is not last instruction
@@ -42,10 +44,10 @@ def Parse(x : str, pc : int)-> str:                                     #functio
 
     tokens = x.split(' ')   #[instruction, rd, rs1, ..]                #splits the str into tokens, for every space
     
-    if tokens[0][-1]==':' :#label           
-        tokens = tokens[1:]
-        if tokens == []:
-            return ''
+    # if tokens[0][-1]==':' :#label           
+    #     tokens = tokens[1:]
+    #     if tokens == []:
+    #         return ''
 
     instr = tokens[0]       #instruction                                #first element of tokens is the instruction 
     
@@ -59,14 +61,32 @@ def Parse(x : str, pc : int)-> str:                                     #functio
 
 
 #read and store input from file                                         #classic input
-with open(r"src\input.txt") as f:
+with open(r"src/input.txt") as f:
     inp_lines = [i.strip('\n').strip() for i in f]
 inp_lines = [i for i in inp_lines if i != ''] #remove empty lines
-length = len(inp_lines)
+
 #print(inp_lines)
 count = 0
 
-with open(r"src\output.txt", "w") as f:
+#first pass
+for line in inp_lines:
+    count += 1
+    temp = line.replace(',', ' ')
+    temp = temp.split(' ')
+    if temp[0][-1]==':' :#label           
+        label_[temp[0]] = count
+        if temp[1:] is []:
+            inp_lines.pop(count - 1)
+        else:
+            inp_lines[count - 1] = ','.join(temp[1:])
+count = 0   
+inp_lines = [i for i in inp_lines if i != ''] #remove empty lines
+
+# print(label_)
+# print(inp_lines)
+length = len(inp_lines)
+#second pass
+with open(r"src/output.txt", "w") as f:
     for line in inp_lines:
         #if not line=='':
             count+=1
