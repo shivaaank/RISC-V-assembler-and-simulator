@@ -100,7 +100,7 @@ length = len(inp_lines)
 with open(out_file, "w") as f:
     for line in inp_lines:
         #if not line=='':
-            print(f'Instruction {count}.')
+            print(f'Instruction {count+1}.')
             out_line = Parse(line, count)
             print(out_line)
             print('----------')
