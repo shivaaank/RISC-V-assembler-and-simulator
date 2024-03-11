@@ -6,6 +6,7 @@ import sys
 inp_file = sys.argv[1]
 out_file = sys.argv[2]
 label_ = {}
+virtual_hlt = ("beq zero,zero,0x00000000", "beq zero,zero,0", "beq,zero,zero,0")
 
 def convert(x : list, instr : str, pc: int)-> str:        #senior function checking where the opcode exists.  
     if instr in R_:                                       #Accordingly it runs functions relevant to the type of instruction, R, I, S, J, U, B etc.
@@ -27,11 +28,21 @@ def convert(x : list, instr : str, pc: int)-> str:        #senior function check
 def Parse(x : str, pc : int)-> str:                                     #function takes string 'x' and program counter pc as int. 
     #check if valid:
     # x = x.lstrip()
+    #handle inline comments, replace , with space
+    if "#" in x:
+        pos = x.index("#")                                              #if there is a comment, sets index to position of # in str
+        if pos != 0 and pos != len(x)-1:                                #if position isn't first or last, replaces ',' by ' ' from 0 to position
+            x = x[0:pos]
+            print(x)
+    
+    # print(x)
     if (x[0] == "\n" or x[0] == "" or x[0] == "."):      #checks whether string is a comment or empty, in which case returns empty string
         return ''
 
-    if x=="beq zero,zero,0x00000000" or x == "beq zero,zero,0" or x == "beq,zero,zero,0":         #checks if instruction is virtual halt
+    if x.startswith("beq zero,zero,0x00000000") or x.startswith("beq zero,zero,0") or x.startswith("beq,zero,zero,0"):         #checks if instruction is virtual halt
         #check if last line
+
+            
         if pc==length-1:      
             return '00000000000000000000000001100011'                   #returns machine code for virtual halt, otherwise throws error suggesting that it is not last instruction
         else:
@@ -40,20 +51,14 @@ def Parse(x : str, pc : int)-> str:                                     #functio
     if pc==length-1 and (x!="beq zero,zero,0x00000000" or x!="beq,zero,zero,0" or x!="beq zero,zero,0"):                    #if program counter is equal to length of instructions, throw error for missing Virtual halt
         raise Exception ("missing virtual halt")
 
-    #handle inline comments, replace , with space
-    if "#" in x:
-        pos = x.index("#")                                              #if there is a comment, sets index to position of # in str
-        if pos != 0 and pos != len(x)-1:                                #if position isn't first or last, replaces ',' by ' ' from 0 to position
-            x = x[0:pos].replace(',', ' ')
-    else:
-        x = x.replace(',', ' ') 
     
-
+    x = x.replace(',', ' ')
     tokens = x.split(' ')   #[instruction, rd, rs1, ..]                #splits the str into tokens, for every space
-
+    tokens = [i for i in tokens if i!='']
     instr = tokens[0]       #instruction                                #first element of tokens is the instruction 
     
     try:
+        # print(len(tokens))
         output_line = convert(tokens[1:], instr, pc)                    #calls for the convert function in line 4 and returns the final output line
     except KeyError:
         raise Exception ("Invalid instruction or wrong register name")

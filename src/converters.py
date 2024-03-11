@@ -33,9 +33,9 @@ def convert_R(x : list, instr : str) -> str:                                    
 # print(convert_R(['t1', 's0', 'a0'], 'sub'))
 
 def convert_I(x : list, instr : str) -> str:
-    assert len(x)==3, "syntax error"
     opcode, func3 = I_[instr][0], I_[instr][1]
     if instr == 'lw':
+        assert len(x)==2, "syntax error"
         rd = format(int(regs[x[0]][1:]),'05b')
         rs1 = format(int(regs[x[1].split('(')[1].rstrip(')')][1:]),'05b')
         imm = format(int(x[1].split('(')[0].strip()),'012b')
@@ -47,6 +47,7 @@ def convert_I(x : list, instr : str) -> str:
         print("offset = ", imm)
         
     else:
+        assert len(x)==3, "syntax error"
         rd = format(int(regs[x[0]][1:]),'05b')
         rs1 = format(int(regs[x[1]][1:]),'05b')
         imm = format(int(x[2]),'012b') #this is offset for jalr instruc
