@@ -75,19 +75,32 @@ def convert_S(x : list, instr : str) -> str:
     return imm[0:7]+rs2+rs1+funct3+imm[7:12]+opcode
 #print(convert_S(['ra', '32(sp)'], 'sw'))
 
-def convert_J(x : list, instr : str, pc: int) -> str:
+def convert_J(x : list, instr : str, labledict : dict, pc: int) -> str:
     assert len(x)==2, "syntax error"
     opcode,rd = J_[instr], x[0]
     rd = format(int(regs[rd][1:]),'05b')
-    imm = format(int(x[1]),'021b')
+    # imm = format(int(x[1]),'021b')
+    if x[1] not in labledict and x[1][1:].isdigit():
+        imm = int(x[2])
+
+    elif x[1] in labledict:
+        lable_addr = labledict[x[1]]
+        imm = (lable_addr-pc)*4
+    else:
+        raise Exception ("Invalid lable")
     # if int(x[1])%4 != 0:
     #     raise Exception('Invalid offset value')
     # if int(x[1]) < 0:
     #     if -int(x[1]) > pc:
     #         raise Exception("Offset outside program range")
-    if imm[0] == '-':
-        imm = "0" + imm[1:]
-        imm = twos_comp(imm)
+    if imm < 0:
+        imm = twos_comp(format(abs(imm), '021b'))    #computes two's complement for immediate < 0
+    else:
+        imm = format(imm, '021b')
+    # imm = imm[::-1]
+    # if imm[0] == '-':
+    #     imm = "0" + imm[1:]
+    #     imm = twos_comp(imm)
     imm = imm[::-1]
     imm = imm[20] + imm[10:0:-1] +imm[11] + imm[19:11:-1]
     print("rd = ", rd)
@@ -119,7 +132,8 @@ def convert_B(x : list, instr: str, pc: int, labledict : dict) -> str:
     rs1 = format(int(regs[x[0]][1:]), '05b')
     rs2 = format(int(regs[x[1]][1:]), '05b') 
     print(labledict)
-    if x[2] not in labledict and x[2].isdigit():
+    print(x)
+    if x[2] not in labledict and x[2][1:].isdigit():
         imm = int(x[2])
 
     elif x[2] in labledict:

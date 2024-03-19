@@ -1,11 +1,7 @@
-xor s0,s1,s2
-addi s3,s4,-50
-
-auipc t0,-64
-jal t1,32
-srl t2,t3,t4
-sw t5,-20(s0)
-sltiu t6,a0,5
-sub t1,t3,tp
-lw s0,48(gp)
+lui t0,100,gp
+srl s0,t0,tp
+sll s1,t0,zero
+and s2,t0,s1
+or s3,t0,s1
+xor s4,s2,s3
 beq zero,zero,0

@@ -16,7 +16,7 @@ def convert(x : list, instr : str, pc: int)-> str:        #senior function check
     elif instr in S_:
         return convert_S(x, instr)
     elif instr in J_:
-        return convert_J(x, instr, pc)
+        return convert_J(x, instr, label_, pc)
     elif instr in U_:
         return convert_U(x, instr, pc)
     elif instr in B_:
