@@ -81,7 +81,7 @@ def convert_J(x : list, instr : str, labledict : dict, pc: int) -> str:
     rd = format(int(regs[rd][1:]),'05b')
     # imm = format(int(x[1]),'021b')
     if x[1] not in labledict and x[1][1:].isdigit():
-        imm = int(x[2])
+        imm = int(x[1])
 
     elif x[1] in labledict:
         lable_addr = labledict[x[1]]
