@@ -56,17 +56,11 @@ class simulator:
         while self.instruc_list[self.pc//4] != '00000000000000000000000001100011':
             pointer = self.pc//4
             opcode = self.instruc_list[pointer][-7:-1] + self.instruc_list[pointer][-1]
+            ex = 0
             if opcode == list(R_.values())[1][0]:
                 pass
             elif opcode in [i[0] for i in I_.values()]:
                 ex = I_type(self.instruc_list[pointer],self.pc)
-                ex.execute()
-                self.pc = ex.pc
-                if self.pc < 0:
-                    self.pc = 2**32 + self.pc
-                    self.print_state()
-                    break
-                self.print_state()
             elif opcode in [i for i in S_.values()]:
                 pass
             elif opcode == list(B_.values())[1][0]:
@@ -79,5 +73,12 @@ class simulator:
                 pass
             else:
                 raise Exception (f"{opcode} is an invalid opcode")
+            ex.execute()
+            self.pc = ex.pc
+            if self.pc < 0:
+                self.pc = 2**32 + self.pc
+                self.print_state()
+                break
+            self.print_state()
         self.print_state()
             

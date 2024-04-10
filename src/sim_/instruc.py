@@ -39,17 +39,20 @@ class I_type(Instr):
             pass #memory
         elif self.comp == I_['addi']:
             if self.imm[0] == '0': reg_vals[self.rd] += int(self.imm,2)
-            else: reg_vals[self.rd] -= int(self.twoscomp(int(self.imm,2),12),2)
+            else: reg_vals[self.rd] += int(self.twoscomp(int(self.imm,2),12),2)
             self.pc += 4
+            print('hello')
         elif self.comp == I_['sltiu']:
             reg_vals[self.rd] = 1 if int(self.imm,2) > reg_vals[self.rs1] else 0
             self.pc += 4
         elif self.comp == I_['jalr']:
+            # print('h')
             reg_vals[self.rd] = self.pc + 4
             if self.imm[0] == '0': self.pc = reg_vals[self.rs1] + int(self.imm,2)
             else: self.pc = reg_vals[self.rs1] - int(self.twoscomp(int(self.imm,2),12),2)
-            if self.pc%2 != 0 and self.pc>0: self.pc -= 1
-            elif self.pc%2 != 0 and self.pc<0: self.pc += 1
+            if self.pc%2 != 0: self.pc -= 1
+            if self.pc<0: 
+                self.pc = 2**32 + self.pc
         # self.print_state() 
 
 class R_type(Instr):
@@ -72,5 +75,9 @@ class B_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
         super().__init__(ins,pc)
 
-
-# print(int(Instr.twoscomp(int('111111111001',2),12),2))
+ 
+# print(format(2**32 - int(Instr.twoscomp(int('111111111001',2),12),2),'032b'))
+# # print(Instr.parse('11111111100101111000000011100111',[12,17,20,25,32]))
+# a = I_type('00000000011101111000000011100111',0)
+# a.execute()
+# print(a.pc)
