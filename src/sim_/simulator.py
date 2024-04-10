@@ -62,6 +62,10 @@ class simulator:
                 ex = I_type(self.instruc_list[pointer],self.pc)
                 ex.execute()
                 self.pc = ex.pc
+                if self.pc < 0:
+                    self.pc = 2**32 + self.pc
+                    self.print_state()
+                    break
                 self.print_state()
             elif opcode in [i for i in S_.values()]:
                 pass
