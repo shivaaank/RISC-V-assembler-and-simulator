@@ -55,6 +55,45 @@ class I_type(Instr):
 class R_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
         super().__init__(ins,pc)
+        self.instr = self.parse(self.instr,[7,12,17,20,25,32])
+        self.rd = self.instr[1] #signed or unsigned check
+        self.rs1 = self.instr[2]
+        self.rs2 = self.instr[4]
+        self.comp = (self.opcode,self.instr[3],self.instr[0])
+        print(self.comp)
+    def execute(self):
+        if self.comp == R_['add']:
+            print('add')
+            reg_vals[self.rd] = reg_vals[self.rs1] + reg_vals[self.rs2]
+        elif self.comp == R_['sub']:
+            print('sub')
+            if self.rs1 == "00000": reg_vals[self.rd] = -reg_vals[self.rs2]
+            else: reg_vals[self.rd] = reg_vals[self.rs1] - reg_vals[self.rs2]
+        elif self.comp == R_['slt']:
+            print('slt')
+            reg_vals[self.rd] = 1 if reg_vals[self.rs1] < reg_vals[self.rs2] else 0
+        elif self.comp == R_['sltu']:
+            print('sltu')
+            unsignedrs1 = 2**32 + reg_vals[self.rs1] if reg_vals[self.rs1] <0 else reg_vals[self.rs1]
+            unsignedrs2 = 2**32 + reg_vals[self.rs2] if reg_vals[self.rs2] <0 else reg_vals[self.rs2]
+            reg_vals[self.rd] = 1 if unsignedrs1 < unsignedrs2 else 0
+        elif self.comp == R_['xor']:
+            print('xor')
+            reg_vals[self.rd] = reg_vals[self.rs1] ^ reg_vals[self.rs2]
+        elif self.comp == R_['sll']:
+            print('sll')
+            reg_vals[self.rd] = reg_vals[self.rs1] << int('{:032b}'.format(reg_vals[self.rs2])[-5:])
+        elif self.comp == R_['srl']:
+            print('srl')
+            reg_vals[self.rd] = reg_vals[self.rs1] >> int('{:032b}'.format(reg_vals[self.rs2])[-5:]) 
+        elif self.comp == R_['or']:
+            print('or')
+            reg_vals[self.rd] = reg_vals[self.rs1] | reg_vals[self.rs2]
+        elif self.comp == R_['and']:
+            print('and')
+            reg_vals[self.rd] = reg_vals[self.rs1] & reg_vals[self.rs2]
+        self.pc += 4
+
 
 class S_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
