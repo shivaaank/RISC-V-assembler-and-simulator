@@ -1,2 +1,3 @@
-add s1,s2,s3
-beq zero,zero,0x00000000
+jalr sp,gp,-07
+
+beq zero,zero,0
