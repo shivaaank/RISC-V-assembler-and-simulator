@@ -1,5 +1,6 @@
 from instr_dicts import *
 from reg_dicts import reg_vals
+from mem_location import mem
 class Instr:
     def __init__(self,ins: str,pc:int) -> None:
         self.instr = ins
@@ -35,16 +36,19 @@ class I_type(Instr):
         self.comp = (self.opcode,self.instr[2],)
     def execute(self):
         if self.comp == I_['lw']:
+            if self.imm[0] == '0': reg_vals[self.rd] = mem[int(self.imm,2) + reg_vals[self.rs1]]
+            else: reg_vals[self.rd] = mem[-int(self.twoscomp(int(self.imm,2),12),2)+ reg_vals[self.rs1]]
             self.pc += 4
-            pass #memory
+
         elif self.comp == I_['addi']:
             if self.imm[0] == '0': reg_vals[self.rd] += int(self.imm,2)
-            else: reg_vals[self.rd] += int(self.twoscomp(int(self.imm,2),12),2)
+            else: reg_vals[self.rd] -= int(self.twoscomp(int(self.imm,2),12),2)
             self.pc += 4
-            print('hello')
+
         elif self.comp == I_['sltiu']:
             reg_vals[self.rd] = 1 if int(self.imm,2) > reg_vals[self.rs1] else 0
             self.pc += 4
+
         elif self.comp == I_['jalr']:
             # print('h')
             reg_vals[self.rd] = self.pc + 4
@@ -63,35 +67,43 @@ class R_type(Instr):
         self.rs1 = self.instr[2]
         self.rs2 = self.instr[4]
         self.comp = (self.opcode,self.instr[3],self.instr[0])
-        print(self.comp)
+        #print(self.comp)
     def execute(self):
         if self.comp == R_['add']:
             print('add')
             reg_vals[self.rd] = reg_vals[self.rs1] + reg_vals[self.rs2]
+
         elif self.comp == R_['sub']:
             print('sub')
             if self.rs1 == "00000": reg_vals[self.rd] = -reg_vals[self.rs2]
             else: reg_vals[self.rd] = reg_vals[self.rs1] - reg_vals[self.rs2]
+
         elif self.comp == R_['slt']:
             print('slt')
             reg_vals[self.rd] = 1 if reg_vals[self.rs1] < reg_vals[self.rs2] else 0
+
         elif self.comp == R_['sltu']:
             print('sltu')
             unsignedrs1 = 2**32 + reg_vals[self.rs1] if reg_vals[self.rs1] <0 else reg_vals[self.rs1]
             unsignedrs2 = 2**32 + reg_vals[self.rs2] if reg_vals[self.rs2] <0 else reg_vals[self.rs2]
             reg_vals[self.rd] = 1 if unsignedrs1 < unsignedrs2 else 0
+
         elif self.comp == R_['xor']:
             print('xor')
             reg_vals[self.rd] = reg_vals[self.rs1] ^ reg_vals[self.rs2]
+
         elif self.comp == R_['sll']:
             print('sll')
             reg_vals[self.rd] = reg_vals[self.rs1] << int('{:032b}'.format(reg_vals[self.rs2])[-5:])
+
         elif self.comp == R_['srl']:
             print('srl')
             reg_vals[self.rd] = reg_vals[self.rs1] >> int('{:032b}'.format(reg_vals[self.rs2])[-5:]) 
+
         elif self.comp == R_['or']:
             print('or')
             reg_vals[self.rd] = reg_vals[self.rs1] | reg_vals[self.rs2]
+
         elif self.comp == R_['and']:
             print('and')
             reg_vals[self.rd] = reg_vals[self.rs1] & reg_vals[self.rs2]

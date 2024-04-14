@@ -1,5 +1,5 @@
 from instruc import *
-
+#---------------DONT DELETE THIS FOR NOWwWWWWWWWWWWWWWWWWWWW--------------
 # def read(instruc):
 #     opcode = instruc[-1:-8:-1]
     
@@ -23,13 +23,6 @@ from instruc import *
 #         raise Exception (f"{opcode} is an invalid opcode")   
     
 
-# def parse(i, y):
-#     x = [i[y[j]:y[j+1]] for j in range(len(y)-1)]
-#     j = [i[:y[0]]]
-#     j.extend(x)
-#     return j
-    
-
 # read('00000000001000011000000100010011')
 
 
@@ -46,17 +39,22 @@ class simulator:
         w+= prefix+format(self.pc,'032b')+' '
         print(prefix+format(self.pc,'032b'),end = ' ')
         for reg_v in list(reg_vals.values()):
-            w+=prefix+format(reg_v,'032b') + ' '
-            print(prefix+format(reg_v,'032b'),end = ' ')
+            if reg_v >= 0:
+                w+=prefix+format(reg_v,'032b') + ' '
+                print(prefix+format(reg_v,'032b'),end = ' ')
+            else:
+                reg_v = 2**32 + reg_v
+                w+=prefix+format(reg_v,'032b') + ' '
+                print(prefix+format(reg_v,'032b'),end = ' ')
         w += '\n'
-        with open('src\sim_output.txt','a') as f:
+        with open('src\sim_\sim_output.txt','a') as f:
             f.write(w)
         print()
     def execute(self):
         while self.instruc_list[self.pc//4] != '00000000000000000000000001100011':
             pointer = self.pc//4
             opcode = self.instruc_list[pointer][-7:-1] + self.instruc_list[pointer][-1]
-            ex = 0
+            ex = None
             if opcode == list(R_.values())[1][0]:
                 ex = R_type(self.instruc_list[pointer], self.pc)
                 ex.execute()

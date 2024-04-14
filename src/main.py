@@ -68,7 +68,7 @@ def Parse(x : str, pc : int)-> str:                                     #functio
 
 
 #read and store input from file                                         #classic input
-with open("input.txt") as f:
+with open("src\input.txt") as f:
     inp_lines = [i.strip('\n').strip() for i in f]
 inp_lines = [i for i in inp_lines if i != ''] #remove empty lines
 inp_lines = [i for i in inp_lines if i.strip()[0]!="#"] #remove commented lines
@@ -98,7 +98,7 @@ print(inp_lines)
 #print(inp_lines)
 length = len(inp_lines)
 #second pass
-with open("output.txt", "w") as f:
+with open("src\output.txt", "w") as f:
     for line in inp_lines:
         #if not line=='':
             out_line = Parse(line, count)
