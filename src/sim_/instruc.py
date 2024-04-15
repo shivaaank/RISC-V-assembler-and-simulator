@@ -148,12 +148,55 @@ class J_type(Instr):
 class U_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
         super().__init__(ins,pc)
+        self.instr = self.parse(self.instr, [20,25,32])
+        self.imm = self.instr[0]
+        self.rd = self.instr[1]
+        self.op = self.instr[2]
+        imm = self.imm + 12*'0'
+        self.sextimm = int(imm,2) if imm[0]=='0' else -int(self.twoscomp(int(self.imm,2),32),2)
+    def execute(self):
+        if self.op=='0110111':
+            reg_vals[self.rd] = self.pc+ self.sextimm
+        else:
+            reg_vals[self.rd] = self.sextimm
 
 class B_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
         super().__init__(ins,pc)
+        self.instr = self.parse(self.instr, [7,12,17,20,25,32])
+        self.funct3 = self.instr[3]
+        self.rs1 = self.instr[2]
+        self.rs2 = self.instr[1]
+        self.imm = self.instr[0][0] + self.instr[4][-1] + self.instr[0][1:] + self.instr[4][0:5]
+        self.imm = self.imm + "0"
+        self.sextimm = int(self.imm,2) if self.imm[0]=='0' else -int(self.twoscomp(int(self.imm,2),12),2) 
+
+    def execute(self):
+        if(self.funct3=='000'):
+            if(reg_vals[self.rs1]==reg_vals[self.rs2]):
+                self.pc = self.pc + self.sextimm
+        elif(self.funct3=='001'):
+           if(reg_vals[self.rs1]!=reg_vals[self.rs2]):
+                self.pc = self.pc + self.sextimm 
+        elif(self.funct3=='100'):
+            if(reg_vals[self.rs1]<reg_vals[self.rs2]):
+               self.pc = self.pc + self.sextimm
+        elif(self.funct3=='101'):
+            if(reg_vals[self.rs1]>=reg_vals[self.rs2]):
+               self.pc = self.pc + self.sextimm
+        elif(self.funct3=='110'):
+            unsignedrs1 = 2**32 + reg_vals[self.rs1] if reg_vals[self.rs1] <0 else reg_vals[self.rs1]
+            unsignedrs2 = 2**32 + reg_vals[self.rs2] if reg_vals[self.rs2] <0 else reg_vals[self.rs2] 
+            if(unsignedrs1<unsignedrs2):
+               self.pc = self.pc + self.sextimm 
+        elif(self.funct3=='111'):
+            unsignedrs1 = 2**32 + reg_vals[self.rs1] if reg_vals[self.rs1] <0 else reg_vals[self.rs1]
+            unsignedrs2 = 2**32 + reg_vals[self.rs2] if reg_vals[self.rs2] <0 else reg_vals[self.rs2] 
+            if(unsignedrs1>unsignedrs2):
+               self.pc = self.pc + self.sextimm  
 
  
+u = U_type('11111111111111111111100100010111', 1)
 # print(format(2**32 - int(Instr.twoscomp(int('111111111001',2),12),2),'032b'))
 # # print(Instr.parse('11111111100101111000000011100111',[12,17,20,25,32]))
 # a = I_type('00000000011101111000000011100111',0)
