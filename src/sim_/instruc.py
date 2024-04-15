@@ -142,8 +142,7 @@ class J_type(Instr):
         if self.imm[0] == '0':
             self.pc=self.pc+self.imm[20:1]
         else:
-            #self.pc=self.pc+self.twoscomp
-            pass
+            self.pc=self.pc-int(self.twoscomp(int(self.imm,2),20),2)
 
 class U_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
