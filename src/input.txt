@@ -1,3 +1,2 @@
-lw gp,4(ra)
-
+jal ra,-1024
 beq zero,zero,0
