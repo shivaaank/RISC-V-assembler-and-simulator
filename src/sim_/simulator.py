@@ -72,9 +72,6 @@ class simulator:
             ex = None
             if opcode == list(R_.values())[1][0]:
                 ex = R_type(self.instruc_list[pointer], self.pc)
-                ex.execute()
-                self.pc = ex.pc
-                self.print_state()
             elif opcode in [i[0] for i in I_.values()]:
                 ex = I_type(self.instruc_list[pointer],self.pc)
             elif opcode in [i for i in S_.values()]:

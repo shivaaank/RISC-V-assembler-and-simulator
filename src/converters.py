@@ -150,3 +150,5 @@ def convert_B(x : list, instr: str, pc: int, labledict : dict) -> str:
     imm = imm[::-1]
 
     return imm[12]+imm[10:4:-1]+rs2+rs1+funct3+imm[4:0:-1]+imm[11]+opcode
+
+print(len('11000000000111111111'))
