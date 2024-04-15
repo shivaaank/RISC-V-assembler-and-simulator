@@ -26,7 +26,7 @@ S_ = {
 
 #J-type (opcode)
 J_ = {
-    "jal" : ('1101111')
+    "jal" : ("1101111")
 }
 
 #U-type (opcode)

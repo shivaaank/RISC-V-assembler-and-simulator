@@ -68,10 +68,11 @@ class simulator:
     def execute(self):
         while self.instruc_list[self.pc//4] != '00000000000000000000000001100011':
             pointer = self.pc//4
-            opcode = self.instruc_list[pointer][-7:-1] + self.instruc_list[pointer][-1]
+            opcode = self.instruc_list[pointer][-7:] 
             ex = None
             if opcode == list(R_.values())[1][0]:
                 ex = R_type(self.instruc_list[pointer], self.pc)
+                
             elif opcode in [i[0] for i in I_.values()]:
                 ex = I_type(self.instruc_list[pointer],self.pc)
             elif opcode in [i for i in S_.values()]:
@@ -81,7 +82,8 @@ class simulator:
             elif opcode in [i for i in U_.values()]:
                 pass
             elif opcode in [i for i in J_.values()]:
-                pass
+                ex = J_type(self.instruc_list[pointer],self.pc)
+                
             elif opcode in [i for i in bonus_.values()]:
                 pass
             else:
