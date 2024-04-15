@@ -138,9 +138,9 @@ class J_type(Instr):
         #imm = imm[20] + imm[10:0:-1] +imm[11] + imm[19:11:-1]
         self.imm=self.imm[::-1]
         self.imm=self.imm[20]+self.imm[10:0:-1]+self.imm[11]+self.imm[19:11:-1]
-        self.imm[::-1]
+        self.imm[::-1]+'0'
         if self.imm[0] == '0':
-            self.pc=self.pc+self.imm[20:1]
+            self.pc=self.pc+int(self.imm[20:1],2)
         else:
             self.pc=self.pc-int(self.twoscomp(int(self.imm,2),20),2)
 
