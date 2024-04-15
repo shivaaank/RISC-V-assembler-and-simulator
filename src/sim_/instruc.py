@@ -139,11 +139,10 @@ class J_type(Instr):
         self.imm=self.imm[20]+self.imm[10:0:-1]+self.imm[11]+self.imm[19:11:-1]
         self.imm[::-1]
         if self.imm[0] == '0':
-            self.pc=self.pc+int(self.imm[20:1],2)
-            self.pc=(self.pc>>1)<<1
+            self.pc=self.pc+int(self.imm,2)
         else:
-            self.pc=self.pc-int(self.twoscomp(int(self.imm,2),20),2)
-            self.pc=(self.pc>>1)<<1
+            self.pc=self.pc-int(self.twoscomp(int(self.imm,2),20),2)      
+        self.pc=(self.pc>>1)<<1
 
 class U_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
