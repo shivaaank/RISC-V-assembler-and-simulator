@@ -50,6 +50,21 @@ class simulator:
         with open('src\sim_\sim_output.txt','a') as f:
             f.write(w)
         print()
+    def print_mem(self):
+        prefixB, prefixH,w = '0b', '0x', ''
+        for mem_k, mem_v in mem.items():
+            w += prefixH+format(mem_k,'08x')+':'
+            print(prefixH+format(mem_k,'08x')+':', end = '')
+            if mem_v>=0: 
+                w += prefixB+format(mem_v,'032b') + '\n'
+                print(prefixB+format(mem_v,'032b'))
+
+            else: 
+                w += prefixB+format(mem_v+2**32,'032b') + '\n'
+                print(prefixB+format(mem_v+2**32,'032b'))
+        with open('src\sim_\sim_output.txt','a') as f:
+            f.write(w)
+        
     def execute(self):
         while self.instruc_list[self.pc//4] != '00000000000000000000000001100011':
             pointer = self.pc//4
@@ -82,4 +97,5 @@ class simulator:
                 break
             self.print_state()
         self.print_state()
+        self.print_mem()
             

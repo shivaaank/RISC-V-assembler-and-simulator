@@ -41,8 +41,8 @@ class I_type(Instr):
             self.pc += 4
 
         elif self.comp == I_['addi']:
-            if self.imm[0] == '0': reg_vals[self.rd] += int(self.imm,2)
-            else: reg_vals[self.rd] -= int(self.twoscomp(int(self.imm,2),12),2)
+            if self.imm[0] == '0': reg_vals[self.rd] = int(self.imm,2) + reg_vals[self.rs1]
+            else: reg_vals[self.rd] = -int(self.twoscomp(int(self.imm,2),12),2) + reg_vals[self.rs1]
             self.pc += 4
 
         elif self.comp == I_['sltiu']:
