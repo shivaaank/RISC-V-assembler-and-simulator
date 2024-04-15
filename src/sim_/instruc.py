@@ -4,7 +4,8 @@ from mem_location import mem
 class Instr:
     def __init__(self,ins: str,pc:int) -> None:
         self.instr = ins
-        self.opcode = ins[-7:-1] + ins[-1]
+        #self.opcode = ins[-7:-1] + ins[-1]
+        self.opcode=ins[-7:]
         self.pc = pc
 
     @staticmethod
@@ -117,6 +118,39 @@ class S_type(Instr):
 class J_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
         super().__init__(ins,pc)
+        self.instr=self.parse(self.instr,[20,25,32])
+        self.imm = self.instr[0]
+        self.rd=self.instr[1]
+        #self.comp=(self.opcode,)
+
+
+
+
+    def execute(self):
+        
+        #a = (a >> 4) << 4 
+        self.pc=(self.pc>>1)<<1
+        reg_vals[self.rd]=self.pc+4
+        #self.rd=self.pc+4
+        #imm = imm[::-1]
+        #imm = imm[20] + imm[10:0:-1] +imm[11] + imm[19:11:-1]
+        self.imm=self.imm[::-1]
+        self.imm=self.imm[20]+self.imm[10:0:-1]+self.imm[11]+self.imm[19:11:-1]
+        self.imm[::-1]
+        if self.imm[0] == '0':
+            self.pc=self.pc+self.imm[20:1]
+        else:
+            #self.pc=self.pc+self.twoscomp
+            pass
+
+
+
+
+
+
+            
+        
+        
 
 class U_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
