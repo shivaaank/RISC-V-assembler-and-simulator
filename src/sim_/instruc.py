@@ -131,18 +131,19 @@ class J_type(Instr):
         #self.comp=(self.opcode,)
     def execute(self):
         #a = (a >> 4) << 4 
-        self.pc=(self.pc>>1)<<1
         reg_vals[self.rd]=self.pc+4
         #self.rd=self.pc+4
         #imm = imm[::-1]
         #imm = imm[20] + imm[10:0:-1] +imm[11] + imm[19:11:-1]
         self.imm=self.imm[::-1]
         self.imm=self.imm[20]+self.imm[10:0:-1]+self.imm[11]+self.imm[19:11:-1]
-        self.imm[::-1]+'0'
+        self.imm[::-1]
         if self.imm[0] == '0':
             self.pc=self.pc+int(self.imm[20:1],2)
+            self.pc=(self.pc>>1)<<1
         else:
             self.pc=self.pc-int(self.twoscomp(int(self.imm,2),20),2)
+            self.pc=(self.pc>>1)<<1
 
 class U_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
