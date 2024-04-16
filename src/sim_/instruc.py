@@ -89,8 +89,11 @@ class R_type(Instr):
 
         elif self.comp == R_['sub']:
             print('sub')
-            if self.rs1 == "00000": reg_vals[self.rd] = -reg_vals[self.rs2]
-            else: reg_vals[self.rd] = reg_vals[self.rs1] - reg_vals[self.rs2]
+            print('rs1 = ', self.rs1)
+            print('rs2 = ',self.rs2)
+            print('rd = ',self.rd)
+            # if self.rs1 == "00000": reg_vals[self.rd] = -reg_vals[self.rs2]
+            reg_vals[self.rd] = reg_vals[self.rs1] - reg_vals[self.rs2]
 
         elif self.comp == R_['slt']:
             print('slt')
@@ -176,14 +179,16 @@ class U_type(Instr):
         self.imm = self.instr[0]
         self.rd = self.instr[1]
         self.op = self.instr[2]
+        print(self.instr)
         imm = self.imm + 12*'0'
         self.sextimm = int(imm,2) if imm[0]=='0' else -int(self.twoscomp(int(self.imm,2),32),2)
     def execute(self):
         print('u type')
-        if self.op=='0110111':
-            reg_vals[self.rd] = self.pc+ self.sextimm
-        else:
+        if self.op=='0110111': #lui
             reg_vals[self.rd] = self.sextimm
+        else:
+            reg_vals[self.rd] = self.pc+ self.sextimm
+        self.pc+=4
 
 class B_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
@@ -245,7 +250,7 @@ def twoscomp(val:int, length:int = 32):
         final = 2**length  - val
         return format(final,f'0{length}b') 
 
-print(int(twoscomp(int('1111111110000',2),13),2))
+print(int(twoscomp(int('00000000000000010000'+12*'0',2),13),2))
 # u = J_type('00000000000000000000100100110011', 1)
 # print(len(u.imm))
 # print(format(2**32 - int(Instr.twoscomp(int('111111111001',2),12),2),'032b'))
