@@ -36,22 +36,26 @@ class I_type(Instr):
         self.rd = self.instr[3]
         self.comp = (self.opcode,self.instr[2],)
     def execute(self):
+        print("i type")
         if self.comp == I_['lw']:
+            print('lw')
             if self.imm[0] == '0': reg_vals[self.rd] = mem[int(self.imm,2) + reg_vals[self.rs1]]
             else: reg_vals[self.rd] = mem[-int(self.twoscomp(int(self.imm,2),12),2)+ reg_vals[self.rs1]]
             self.pc += 4
 
         elif self.comp == I_['addi']:
+            print('addi')
             if self.imm[0] == '0': reg_vals[self.rd] = int(self.imm,2) + reg_vals[self.rs1]
             else: reg_vals[self.rd] = -int(self.twoscomp(int(self.imm,2),12),2) + reg_vals[self.rs1]
             self.pc += 4
 
         elif self.comp == I_['sltiu']:
+            print('sltiu')
             reg_vals[self.rd] = 1 if int(self.imm,2) > reg_vals[self.rs1] else 0
             self.pc += 4
 
         elif self.comp == I_['jalr']:
-            # print('h')
+            print('jalr')
             reg_vals[self.rd] = self.pc + 4
             if self.imm[0] == '0': self.pc = reg_vals[self.rs1] + int(self.imm,2)
             else: self.pc = reg_vals[self.rs1] - int(self.twoscomp(int(self.imm,2),12),2)
@@ -119,6 +123,7 @@ class S_type(Instr):
         self.rs2 = self.instr[1]
         self.rs1 = self.instr[2]
     def execute(self):
+        print('s type')
         sextimm = int(self.imm,2) if self.imm[0]=='0' else -int(self.twoscomp(int(self.imm,2),12),2) 
         mem[reg_vals[self.rs1]+sextimm] = reg_vals[self.rs2]
 
@@ -130,19 +135,26 @@ class J_type(Instr):
         self.rd=self.instr[1]
         #self.comp=(self.opcode,)
     def execute(self):
+        print("j type")
         #a = (a >> 4) << 4 
         reg_vals[self.rd]=self.pc+4
         #self.rd=self.pc+4
         #imm = imm[::-1]
         #imm = imm[20] + imm[10:0:-1] +imm[11] + imm[19:11:-1]
-        self.imm=self.imm[::-1]
-        self.imm=self.imm[20]+self.imm[10:0:-1]+self.imm[11]+self.imm[19:11:-1]
-        self.imm[::-1]
+        print('unscrambled imm = ', self.imm)
+        self.imm = self.imm[10:0:-1] + self.imm[11] + self.imm[19:11:-1] + self.imm[0]
+        self.imm=self.imm[::-1] + '0'
+        # self.imm = self.imm[0] + self.imm[13::] + self.imm[12] + self.imm[1:12]
+        # self.imm=self.imm[20]+self.imm[10:0:-1]+self.imm[11]+self.imm[19:11:-1]
+        # self.imm[::-1]
+        print('imm binary = ', self.imm)
         if self.imm[0] == '0':
             self.pc=self.pc+int(self.imm,2)
+            print('imm = ', int(self.imm,2))
         else:
-            self.pc=self.pc-int(self.twoscomp(int(self.imm,2),20),2)      
-        self.pc=(self.pc>>1)<<1
+            self.pc=self.pc-int(self.twoscomp(int(self.imm,2),20),2)
+            print('imm = ', -int(self.twoscomp(int(self.imm,2),20),2))
+        # self.pc=(self.pc>>1)<<1
 
 class U_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
@@ -154,6 +166,7 @@ class U_type(Instr):
         imm = self.imm + 12*'0'
         self.sextimm = int(imm,2) if imm[0]=='0' else -int(self.twoscomp(int(self.imm,2),32),2)
     def execute(self):
+        print('u type')
         if self.op=='0110111':
             reg_vals[self.rd] = self.pc+ self.sextimm
         else:
@@ -171,6 +184,7 @@ class B_type(Instr):
         self.sextimm = int(self.imm,2) if self.imm[0]=='0' else -int(self.twoscomp(int(self.imm,2),12),2) 
 
     def execute(self):
+        print('b type')
         if(self.funct3=='000'):
             if(reg_vals[self.rs1]==reg_vals[self.rs2]):
                 self.pc = self.pc + self.sextimm
@@ -195,7 +209,8 @@ class B_type(Instr):
                self.pc = self.pc + self.sextimm  
 
  
-u = U_type('11111111111111111111100100010111', 1)
+# u = J_type('00000000000000000000100100110011', 1)
+# print(len(u.imm))
 # print(format(2**32 - int(Instr.twoscomp(int('111111111001',2),12),2),'032b'))
 # # print(Instr.parse('11111111100101111000000011100111',[12,17,20,25,32]))
 # a = I_type('00000000011101111000000011100111',0)
