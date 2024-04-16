@@ -75,7 +75,7 @@ class simulator:
                 
             elif opcode in [i[0] for i in I_.values()]:
                 ex = I_type(self.instruc_list[pointer],self.pc)
-            elif opcode in [i for i in S_.values()]:
+            elif opcode == "0100011":
                 ex = S_type(self.instruc_list[pointer], self.pc)
             elif opcode == list(B_.values())[1][0]:
                 ex = B_type(self.instruc_list[pointer], self.pc)

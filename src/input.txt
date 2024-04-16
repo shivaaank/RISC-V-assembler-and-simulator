@@ -1,2 +1,2 @@
-jal ra,-1024
+auipc ra,-30
 beq zero,zero,0

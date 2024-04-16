@@ -68,9 +68,9 @@ class R_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
         super().__init__(ins,pc)
         self.instr = self.parse(self.instr,[7,12,17,20,25,32])
-        self.rd = self.instr[1] #signed or unsigned check
+        self.rs2 = self.instr[1] #signed or unsigned check
         self.rs1 = self.instr[2]
-        self.rs2 = self.instr[4]
+        self.rd = self.instr[4]
         self.comp = (self.opcode,self.instr[3],self.instr[0])
         #print(self.comp)
     def execute(self):
@@ -99,11 +99,13 @@ class R_type(Instr):
 
         elif self.comp == R_['sll']:
             print('sll')
-            reg_vals[self.rd] = reg_vals[self.rs1] << int('{:032b}'.format(reg_vals[self.rs2])[-5:])
+            reg_vals[self.rs1] = reg_vals[self.rs1] << int('{:032b}'.format(reg_vals[self.rs2])[-5:],2)
+            reg_vals[self.rd] = reg_vals[self.rs1]
 
         elif self.comp == R_['srl']:
             print('srl')
-            reg_vals[self.rd] = reg_vals[self.rs1] >> int('{:032b}'.format(reg_vals[self.rs2])[-5:]) 
+            reg_vals[self.rs1] = reg_vals[self.rs1] >> int('{:032b}'.format(reg_vals[self.rs2])[-5:],2) 
+            reg_vals[self.rd] = reg_vals[self.rs1]
 
         elif self.comp == R_['or']:
             print('or')
@@ -126,6 +128,7 @@ class S_type(Instr):
         print('s type')
         sextimm = int(self.imm,2) if self.imm[0]=='0' else -int(self.twoscomp(int(self.imm,2),12),2) 
         mem[reg_vals[self.rs1]+sextimm] = reg_vals[self.rs2]
+        self.pc += 4
 
 class J_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
@@ -188,25 +191,33 @@ class B_type(Instr):
         if(self.funct3=='000'):
             if(reg_vals[self.rs1]==reg_vals[self.rs2]):
                 self.pc = self.pc + self.sextimm
+            else: self.pc += 4
         elif(self.funct3=='001'):
-           if(reg_vals[self.rs1]!=reg_vals[self.rs2]):
+            if(reg_vals[self.rs1]!=reg_vals[self.rs2]):
                 self.pc = self.pc + self.sextimm 
+            else: self.pc += 4
         elif(self.funct3=='100'):
             if(reg_vals[self.rs1]<reg_vals[self.rs2]):
                self.pc = self.pc + self.sextimm
+            else: self.pc += 4
         elif(self.funct3=='101'):
             if(reg_vals[self.rs1]>=reg_vals[self.rs2]):
                self.pc = self.pc + self.sextimm
+            else: self.pc += 4
         elif(self.funct3=='110'):
             unsignedrs1 = 2**32 + reg_vals[self.rs1] if reg_vals[self.rs1] <0 else reg_vals[self.rs1]
             unsignedrs2 = 2**32 + reg_vals[self.rs2] if reg_vals[self.rs2] <0 else reg_vals[self.rs2] 
             if(unsignedrs1<unsignedrs2):
                self.pc = self.pc + self.sextimm 
+            else: self.pc += 4
         elif(self.funct3=='111'):
             unsignedrs1 = 2**32 + reg_vals[self.rs1] if reg_vals[self.rs1] <0 else reg_vals[self.rs1]
             unsignedrs2 = 2**32 + reg_vals[self.rs2] if reg_vals[self.rs2] <0 else reg_vals[self.rs2] 
             if(unsignedrs1>unsignedrs2):
                self.pc = self.pc + self.sextimm  
+            else: self.pc += 4
+        else:
+            print('hello')
 
  
 # u = J_type('00000000000000000000100100110011', 1)
@@ -216,3 +227,4 @@ class B_type(Instr):
 # a = I_type('00000000011101111000000011100111',0)
 # a.execute()
 # print(a.pc)
+print(Instr.parse('00000001001001001001010010110011',[7,12,17,20,25,32]))
