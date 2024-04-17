@@ -59,7 +59,8 @@ class simulator:
         return w
     def print_mem(self):
         prefixB, prefixH,w = '0b', '0x', ''
-        for mem_k, mem_v in mem.items():
+        for i in range(65536,65661,4):
+            mem_k = i; mem_v = mem[mem_k]
             w += prefixH+format(mem_k,'08x')+':'
             print(prefixH+format(mem_k,'08x')+':', end = '')
             if mem_v>=0: 
