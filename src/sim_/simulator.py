@@ -1,13 +1,17 @@
-from simulator import simulator
+from simulatorclass import simulator
+import sys
+
+inpf = sys.argv[1]
+outpf = sys.argv[2]
 
 pc = 0
 
-with open('sim_input.txt','r') as f:
+with open(inpf,'r') as f:
     instruc = f.readlines()
     instruc = [i.strip('\n') for i in instruc]
 
-with open('sim_output.txt','w') as f:
-    f.write("")
 
+with open(outpf,'w') as f:
+    f.write("")
 sim = simulator(instruc,pc)
-sim.execute()
+sim.execute(outpf)
