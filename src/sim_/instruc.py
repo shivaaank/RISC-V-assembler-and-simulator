@@ -97,6 +97,8 @@ class R_type(Instr):
 
         elif self.comp == R_['slt']:
             print('slt')
+            print('rs1 = ', self.rs1)
+            print('rs2 = ', self.rs2)
             reg_vals[self.rd] = 1 if reg_vals[self.rs1] < reg_vals[self.rs2] else 0
 
         elif self.comp == R_['sltu']:
@@ -111,13 +113,17 @@ class R_type(Instr):
 
         elif self.comp == R_['sll']:
             print('sll')
-            reg_vals[self.rs1] = reg_vals[self.rs1] << int('{:032b}'.format(reg_vals[self.rs2])[-5:],2)
-            reg_vals[self.rd] = reg_vals[self.rs1]
+            unsignedrs1 = 2**32 + reg_vals[self.rs1] if reg_vals[self.rs1] <0 else reg_vals[self.rs1]
+            reg_vals[self.rd] = unsignedrs1 << int('{:032b}'.format(reg_vals[self.rs2])[-5:],2)
+            # reg_vals[self.rd] = reg_vals[self.rs1]
 
         elif self.comp == R_['srl']:
             print('srl')
-            reg_vals[self.rs1] = reg_vals[self.rs1] >> int('{:032b}'.format(reg_vals[self.rs2])[-5:],2) 
-            reg_vals[self.rd] = reg_vals[self.rs1]
+            print('rs1 = ', reg_vals[self.rs1])
+            unsignedrs1 = 2**32 + reg_vals[self.rs1] if reg_vals[self.rs1] <0 else reg_vals[self.rs1]
+            print(int('{:032b}'.format(reg_vals[self.rs2])[-5:],2) )
+            reg_vals[self.rd] = unsignedrs1 >> int('{:032b}'.format(reg_vals[self.rs2])[-5:],2) 
+            # reg_vals[self.rd] = reg_vals[self.rs1]
 
         elif self.comp == R_['or']:
             print('or')
@@ -140,7 +146,7 @@ class S_type(Instr):
         print('s type')
         sextimm = int(self.imm,2) if self.imm[0]=='0' else -int(self.twoscomp(int(self.imm,2),12),2) 
         mem[reg_vals[self.rs1]+sextimm] = reg_vals[self.rs2]
-        self.pc += 4
+        self.pc+=4
 
 class J_type(Instr):
     def __init__(self,ins:str,pc:int) -> None:
@@ -216,6 +222,7 @@ class B_type(Instr):
             else:
                 self.pc+=4
         elif(self.funct3=='001'):
+            print('bne')
             if(reg_vals[self.rs1]!=reg_vals[self.rs2]):
                 self.pc = self.pc + self.sextimm 
             else:
@@ -257,4 +264,3 @@ print(int(twoscomp(int('00000000000000010000'+12*'0',2),13),2))
 # a = I_type('00000000011101111000000011100111',0)
 # a.execute()
 # print(a.pc)
-print(Instr.parse('00000001001001001001010010110011',[7,12,17,20,25,32]))
